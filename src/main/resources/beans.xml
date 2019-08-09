@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/aop  http://www.springframework.org/schema/aop/spring-aop-4.0.xsd"
+
+>
+  
+    <bean id="pojo1" class="net.itta.ittaspringaop.PojoUn"></bean>
+    
+    <bean id="simpleAdvice" class="net.itta.ittaspringaop.SimpleAdvice"></bean>  
+    <bean id="throwsAdvice" class="net.itta.ittaspringaop.MyThrowsAdvice"></bean>  
+  
+
+    <bean id="pojo1proxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="target" ref="pojo1"/>
+        <property name="interceptorNames">
+            <list>
+                <value>throwsAdvice</value>
+                <value>simpleAdvice</value>
+            </list>
+        </property>
+    </bean>      
+    
+    <bean id="myadvice" class="net.itta.ittaspringaop.MyAdvice"></bean>  
+    <aop:config>
+        <aop:aspect id="sa" ref="myadvice">
+            <aop:pointcut id="pointcut-onlyDoIt" expression="execution(* net.itta.ittaspringaop.PojoUn.goTo() )"/>
+            <aop:around method="autour" pointcut-ref="pointcut-onlyDoIt"/>
+            <aop:before method="avant" pointcut-ref="pointcut-onlyDoIt"/>
+        </aop:aspect>
+    </aop:config> 
+    
+   
+
+    
+    
+</beans>
